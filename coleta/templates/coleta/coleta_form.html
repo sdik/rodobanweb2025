@@ -1,0 +1,324 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
+
+    <!-- Formulário principal da coleta -->
+    <form method="post" id="coleta-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.numero_apanha.id_for_label }}">
+                    Número da Apanha
+                </label>
+                {{ form.numero_apanha }}
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.cliente.id_for_label }}">
+                    Cliente
+                </label>
+                {{ form.cliente }}
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.vendedor.id_for_label }}">
+                    Vendedor
+                </label>
+                {{ form.vendedor }}
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.forma_pagamento.id_for_label }}">
+                    Forma de Pagamento
+                </label>
+                {{ form.forma_pagamento }}
+            </div>
+        </div>
+
+        <!-- Lista de Pneus -->
+        <div class="mt-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">Pneus Coletados</h2>
+                <button type="button" onclick="openModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Adicionar Pneu
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Série</th>
+                            <th class="px-4 py-2 text-left">Fogo</th>
+                            <th class="px-4 py-2 text-left">Tamanho</th>
+                            <th class="px-4 py-2 text-left">Desenho</th>
+                            <th class="px-4 py-2 text-left">Fabricante</th>
+                            <th class="px-4 py-2 text-left">Valor</th>
+                            <th class="px-4 py-2 text-left">Montado</th>
+                            <th class="px-4 py-2 text-left">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pneus-table">
+                        <!-- Pneus serão inseridos aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Salvar Coleta
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal para adicionar pneu -->
+<div id="pneuModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Adicionar Pneu</h3>
+            <button onclick="closeModal()" class="text-gray-600 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <form id="pneu-form" onsubmit="return addPneu(event)" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tamanho</label>
+                        <select name="tamanho" class="form-select w-full" required>
+                            <option value="">Selecione um tamanho</option>
+                            {% for tamanho in tamanhos %}
+                            <option value="{{ tamanho.id }}">{{ tamanho.medida }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fabricante</label>
+                        <select name="fabricante" class="form-select w-full" required>
+                            <option value="">Selecione um fabricante</option>
+                            {% for fabricante in fabricantes %}
+                            <option value="{{ fabricante.id }}">{{ fabricante.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Série</label>
+                        <input type="text" name="serie" class="form-input mt-1 block w-full" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fogo</label>
+                        <input type="text" name="fogo" class="form-input mt-1 block w-full" required>
+                    </div>
+            </div>
+
+           
+            <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Desenho</label>
+                <select name="desenho" class="form-select w-full" required>
+                    <option value="">Selecione um desenho</option>
+                    {% for produto in produtos_banda %}
+                    <option value="{{ produto.id }}">{{ produto.descricao }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Valor</label>
+                <input type="number" name="valor" step="0.01" class="form-input mt-1 block w-full" required>
+            </div>
+            </div>           
+
+          
+
+            <div class="grid grid-cols-2 gap-4">
+              
+                <div class="flex items-center">
+                    <input type="checkbox" name="garantia" class="form-checkbox">
+                    <label class="ml-2 block text-sm text-gray-900">Garantia</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="montado" class="form-checkbox">
+                    <label class="ml-2 block text-sm text-gray-900">Montado</label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Observação</label>
+                <textarea name="observacao" class="form-textarea mt-1 block w-full" rows="3"></textarea>
+            </div>  
+
+            <div class="mt-4">
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Adicionar Pneu
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let nextId = 1;
+let pneus = [];
+
+// Carrega os pneus existentes se estiver editando
+{% if pneus_existentes %}
+    {% for pneu in pneus_existentes %}
+        pneus.push({
+            id: nextId++,
+            dbId: {{ pneu.id }},  // ID real do banco de dados
+            serie: '{{ pneu.serie }}',
+            fogo: '{{ pneu.fogo }}',
+            tamanhoId: '{{ pneu.tamanho_id }}',
+            tamanho: document.querySelector(`select[name="tamanho"] option[value="{{ pneu.tamanho_id }}"]`)?.text || '',
+            desenhoId: '{{ pneu.desenho_id }}',
+            desenho: document.querySelector(`select[name="desenho"] option[value="{{ pneu.desenho_id }}"]`)?.text || '',
+            fabricanteId: '{{ pneu.fabricante_id }}',
+            fabricante: document.querySelector(`select[name="fabricante"] option[value="{{ pneu.fabricante_id }}"]`)?.text || '',
+            valor: '{{ pneu.valor }}',
+            montado: {{ pneu.montado|lower }}
+        });
+    {% endfor %}
+    updatePneusTable();
+{% endif %}
+
+function openModal() {
+    document.getElementById('pneuModal').classList.remove('hidden');
+    document.getElementById('pneu-form').reset();
+}
+
+function closeModal() {
+    document.getElementById('pneuModal').classList.add('hidden');
+}
+
+function addPneu(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    const tamanhoSelect = form.querySelector('select[name="tamanho"]');
+    const desenhoSelect = form.querySelector('select[name="desenho"]');
+    const fabricanteSelect = form.querySelector('select[name="fabricante"]');
+    
+    const pneu = {
+        id: nextId++,
+        serie: formData.get('serie'),
+        fogo: formData.get('fogo'),
+        tamanho: tamanhoSelect.options[tamanhoSelect.selectedIndex].text,
+        tamanhoId: formData.get('tamanho'),
+        desenho: desenhoSelect.options[desenhoSelect.selectedIndex].text,
+        desenhoId: formData.get('desenho'),
+        fabricante: fabricanteSelect.options[fabricanteSelect.selectedIndex].text,
+        fabricanteId: formData.get('fabricante'),
+        valor: formData.get('valor'),
+        montado: formData.get('montado') === 'on'
+    };
+    
+    pneus.push(pneu);
+    updatePneusTable();
+    closeModal();
+    return false;
+}
+
+function removePneu(id) {
+    if (window.confirm('Tem certeza que deseja remover este pneu?')) {
+        {% if coleta %}
+            // Se estiver editando uma coleta existente, usa a URL de apagar_pneu
+            const pneu = pneus.find(p => p.id === id);
+            if (pneu && pneu.dbId) {  // dbId é o ID real do banco de dados
+                window.location.href = `{% url 'coleta:apagar_pneu' coleta.pk 0 %}`.replace('0', pneu.dbId);
+                return;
+            }
+        {% endif %}
+        
+        // Se for um pneu novo ou estiver criando uma nova coleta
+        pneus = pneus.filter(pneu => pneu.id !== id);
+        updatePneusTable();
+    }
+}
+
+function updatePneusTable() {
+    const tbody = document.getElementById('pneus-table');
+    tbody.innerHTML = '';
+    
+    pneus.forEach(pneu => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="px-4 py-2">${pneu.serie}</td>
+            <td class="px-4 py-2">${pneu.fogo}</td>
+            <td class="px-4 py-2">${pneu.tamanho}</td>
+            <td class="px-4 py-2">${pneu.desenho}</td>
+            <td class="px-4 py-2">${pneu.fabricante}</td>
+            <td class="px-4 py-2">R$ ${parseFloat(pneu.valor).toFixed(2)}</td>
+            <td class="px-4 py-2">${pneu.montado ? 'Sim' : 'Não'}</td>
+            <td class="px-4 py-2">
+                <button type="button" onclick="removePneu(${pneu.id})" class="text-red-600 hover:text-red-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Função para enviar o formulário
+document.getElementById('coleta-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    console.log('Enviando formulário com pneus:', pneus);
+    
+    // Cria um novo FormData com os dados do formulário
+    const formData = new FormData(this);
+    
+    // Adiciona os campos de gerenciamento do formset
+    formData.append('pneuscoleta_set-TOTAL_FORMS', pneus.length.toString());
+    formData.append('pneuscoleta_set-INITIAL_FORMS', '0');
+    formData.append('pneuscoleta_set-MIN_NUM_FORMS', '0');
+    formData.append('pneuscoleta_set-MAX_NUM_FORMS', '1000');
+    
+    // Adiciona os pneus ao formData
+    pneus.forEach((pneu, index) => {
+        console.log('Adicionando pneu ao formData:', pneu);
+        formData.append(`pneuscoleta_set-${index}-serie`, pneu.serie);
+        formData.append(`pneuscoleta_set-${index}-fogo`, pneu.fogo);
+        formData.append(`pneuscoleta_set-${index}-tamanho`, pneu.tamanhoId);
+        formData.append(`pneuscoleta_set-${index}-desenho`, pneu.desenhoId);
+        formData.append(`pneuscoleta_set-${index}-fabricante`, pneu.fabricanteId);
+        formData.append(`pneuscoleta_set-${index}-valor`, pneu.valor);
+        formData.append(`pneuscoleta_set-${index}-montado`, pneu.montado ? 'true' : 'false');
+    });
+    
+    // Envia o formulário usando fetch
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao enviar formulário:', error);
+    });
+});
+</script>
+{% endblock %}

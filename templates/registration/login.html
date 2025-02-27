@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script> <!-- CDN para simplicidade -->
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">      
+        <div class="h-16 w-full flex items-center justify-center">
+            <img src="{% static 'images/logorodoban.png' %}" 
+            alt="Logo" 
+            class="h-14" 
+            width="180" 
+            height="50">
+            </div>
+            <p class="w-full flex items-center justify-center text-gray-800 mb-6">Gerenciamento de Renovadora - MASTER®</p>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-gray-700">Usuário</label>
+                <input type="text" name="username" id="id_username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+            <div>
+                <label for="id_password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" name="password" id="id_password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300">Entrar</button>
+        </form>
+        {% if form.errors %}
+            <p class="mt-2 text-sm text-red-600">Usuário ou senha inválidos. Tente novamente.</p>
+        {% endif %}
+        <p class="mt-2 text-sm text-center text-gray-600">
+            Desenvolvimento: Jonas Netto.  
+        </p>
+    </div>
+</body>
+</html>

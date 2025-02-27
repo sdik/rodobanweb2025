@@ -1,0 +1,127 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="px-6 py-4">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">
+                    {% if cliente.tipo_pessoa == 'F' %}
+                        {{ cliente.nome }}
+                    {% else %}
+                        {{ cliente.razao_social }}
+                    {% endif %}
+                </h1>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded">
+                    {{ cliente.get_tipo_pessoa_display }}
+                </span>
+            </div>
+
+            {% if cliente.tipo_pessoa == 'F' %}
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <p class="text-gray-600">CPF</p>
+                    <p class="font-semibold">{{ cliente.cpf }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">RG</p>
+                    <p class="font-semibold">{{ cliente.rg }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Data de Nascimento</p>
+                    <p class="font-semibold">{{ cliente.data_nascimento|date:"d/m/Y" }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Estado Civil</p>
+                    <p class="font-semibold">{{ cliente.get_estado_civil_display }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Profissão</p>
+                    <p class="font-semibold">{{ cliente.profissao }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <p class="text-gray-600">CNPJ</p>
+                    <p class="font-semibold">{{ cliente.cnpj }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Nome Fantasia</p>
+                    <p class="font-semibold">{{ cliente.nome_fantasia }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Inscrição Estadual</p>
+                    <p class="font-semibold">{{ cliente.inscricao_estadual }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Inscrição Municipal</p>
+                    <p class="font-semibold">{{ cliente.inscricao_municipal }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Responsável</p>
+                    <p class="font-semibold">{{ cliente.responsavel }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="border-t pt-4">
+                <h2 class="text-xl font-semibold mb-4">Endereço</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-600">CEP</p>
+                        <p class="font-semibold">{{ cliente.cep }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Logradouro</p>
+                        <p class="font-semibold">{{ cliente.logradouro }}, {{ cliente.numero }}</p>
+                    </div>
+                    {% if cliente.complemento %}
+                    <div>
+                        <p class="text-gray-600">Complemento</p>
+                        <p class="font-semibold">{{ cliente.complemento }}</p>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <p class="text-gray-600">Bairro</p>
+                        <p class="font-semibold">{{ cliente.bairro }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Cidade/Estado</p>
+                        <p class="font-semibold">{{ cliente.cidade }}/{{ cliente.estado }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t pt-4 mt-4">
+                <h2 class="text-xl font-semibold mb-4">Contato</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-600">Telefone</p>
+                        <p class="font-semibold">{{ cliente.telefone }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Celular</p>
+                        <p class="font-semibold">{{ cliente.celular }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">E-mail</p>
+                        <p class="font-semibold">{{ cliente.email }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t pt-4 mt-4 flex justify-end space-x-4">
+                <a href="{% url 'cliente:cliente_list' %}" 
+                   class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Voltar
+                </a>
+                <a href="{% url 'cliente:cliente_update' cliente.pk %}" 
+                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Editar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,120 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">
+            {% if form.instance.pk %}
+                Editar Produto
+            {% else %}
+                Novo Produto
+            {% endif %}
+        </h1>
+
+        <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="mb-4 col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.descricao.id_for_label }}">
+                        Descrição
+                    </label>
+                    {{ form.descricao }}
+                    {% if form.descricao.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.descricao.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.und.id_for_label }}">
+                        Unidade
+                    </label>
+                    {{ form.und }}
+                    {% if form.und.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.und.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.cod_bandag.id_for_label }}">
+                        Código Bandag
+                    </label>
+                    {{ form.cod_bandag }}
+                    {% if form.cod_bandag.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.cod_bandag.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.grupo.id_for_label }}">
+                        Grupo
+                    </label>
+                    {{ form.grupo }}
+                    {% if form.grupo.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.grupo.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.subgrupo.id_for_label }}">
+                        Subgrupo
+                    </label>
+                    {{ form.subgrupo }}
+                    {% if form.subgrupo.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.subgrupo.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.tipo_tracao.id_for_label }}">
+                        Tipo de Tração
+                    </label>
+                    {{ form.tipo_tracao }}
+                    {% if form.tipo_tracao.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.tipo_tracao.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.tamanho.id_for_label }}">
+                        Tamanho
+                    </label>
+                    {{ form.tamanho }}
+                    {% if form.tamanho.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.tamanho.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.categoria.id_for_label }}">
+                        Categoria
+                    </label>
+                    {{ form.categoria }}
+                    {% if form.categoria.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.categoria.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.status.id_for_label }}">
+                        Status
+                    </label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.status.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Salvar
+                </button>
+                <a href="{% url 'produto:produto_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
