@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">
+            {% if form.instance.pk %}
+                Editar Vendedor
+            {% else %}
+                Novo Vendedor
+            {% endif %}
+        </h1>
+
+        <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.nome.id_for_label }}">
+                        Nome
+                    </label>
+                    {{ form.nome }}
+                    {% if form.nome.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.nome.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.apelido.id_for_label }}">
+                        Apelido
+                    </label>
+                    {{ form.apelido }}
+                    {% if form.apelido.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.apelido.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.telefone.id_for_label }}">
+                        Telefone
+                    </label>
+                    {{ form.telefone }}
+                    {% if form.telefone.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.telefone.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.email.id_for_label }}">
+                        Email
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.percentual_comissao.id_for_label }}">
+                        Percentual de Comissão (%)
+                    </label>
+                    {{ form.percentual_comissao }}
+                    {% if form.percentual_comissao.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.percentual_comissao.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.senha.id_for_label }}">
+                        Senha
+                    </label>
+                    {{ form.senha }}
+                    {% if form.senha.errors %}
+                        <p class="text-red-500 text-xs italic">{{ form.senha.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Salvar
+                </button>
+                <a href="{% url 'vendedor:vendedor_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

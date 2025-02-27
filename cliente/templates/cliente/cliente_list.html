@@ -1,0 +1,166 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %} Rodoban - Clientes {% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Clientes</h1>
+        <a href="{% url 'cliente:cliente_create' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Novo Cliente
+        </a>
+    </div>
+
+    <!-- Busca -->
+    <div class="mb-6">
+        <form method="get" class="flex gap-2">
+            <input type="text" name="search" value="{{ request.GET.search }}" 
+                   class="flex-1 border rounded px-3 py-2" 
+                   placeholder="Buscar por nome, CPF ou CNPJ...">
+            <input type="hidden" name="order_by" value="{{ current_order_by }}">
+            <input type="hidden" name="direction" value="{{ current_direction }}">
+            <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                Buscar
+            </button>
+        </form>
+    </div>
+
+    <!-- Tabela -->
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-50 border-b">
+                    {% url 'cliente:cliente_list' as base_url %}
+                    
+                    <th class="px-6 py-3 text-left">
+                        <a href="?{% if current_order_by == 'tipo_pessoa' and current_direction == 'asc' %}order_by=tipo_pessoa&direction=desc{% else %}order_by=tipo_pessoa&direction=asc{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+                           class="group flex items-center space-x-1 text-sm font-medium text-gray-700">
+                            <span>Tipo</span>
+                            {% if current_order_by == 'tipo_pessoa' %}
+                                {% if current_direction == 'asc' %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                {% else %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                {% endif %}
+                            {% else %}
+                                <svg class="w-4 h-4 text-gray-300 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                            {% endif %}
+                        </a>
+                    </th>
+                    
+                    <th class="px-6 py-3 text-left">
+                        <a href="?{% if current_order_by == 'nome_completo' and current_direction == 'asc' %}order_by=nome_completo&direction=desc{% else %}order_by=nome_completo&direction=asc{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+                           class="group flex items-center space-x-1 text-sm font-medium text-gray-700">
+                            <span>Nome/Razão Social</span>
+                            {% if current_order_by == 'nome_completo' %}
+                                {% if current_direction == 'asc' %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                {% else %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                {% endif %}
+                            {% else %}
+                                <svg class="w-4 h-4 text-gray-300 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                            {% endif %}
+                        </a>
+                    </th>
+                    
+                    <th class="px-6 py-3 text-left">
+                        <a href="?{% if current_order_by == 'cpf' and current_direction == 'asc' %}order_by=cpf&direction=desc{% else %}order_by=cpf&direction=asc{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+                           class="group flex items-center space-x-1 text-sm font-medium text-gray-700">
+                            <span>CPF/CNPJ</span>
+                            {% if current_order_by == 'cpf' %}
+                                {% if current_direction == 'asc' %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                {% else %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                {% endif %}
+                            {% else %}
+                                <svg class="w-4 h-4 text-gray-300 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                            {% endif %}
+                        </a>
+                    </th>
+                    
+                    <th class="px-6 py-3 text-left">
+                        <a href="?{% if current_order_by == 'telefone' and current_direction == 'asc' %}order_by=telefone&direction=desc{% else %}order_by=telefone&direction=asc{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+                           class="group flex items-center space-x-1 text-sm font-medium text-gray-700">
+                            <span>Telefone</span>
+                            {% if current_order_by == 'telefone' %}
+                                {% if current_direction == 'asc' %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                {% else %}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                {% endif %}
+                            {% else %}
+                                <svg class="w-4 h-4 text-gray-300 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                            {% endif %}
+                        </a>
+                    </th>
+                    
+                    <th class="px-6 py-3 text-left">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for cliente in clientes %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">{{ cliente.get_tipo_pessoa_display }}</td>
+                    <td class="px-6 py-4">
+                        {% if cliente.tipo_pessoa == 'F' %}
+                            {{ cliente.nome }}
+                        {% else %}
+                            {{ cliente.razao_social }}
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if cliente.tipo_pessoa == 'F' %}
+                            {{ cliente.cpf }}
+                        {% else %}
+                            {{ cliente.cnpj }}
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">{{ cliente.telefone }}</td>
+                    <td class="px-6 py-4 space-x-2">
+                        <a href="{% url 'cliente:cliente_detail' cliente.pk %}" 
+                           class="text-blue-600 hover:text-blue-900">Detalhes</a>
+                        <a href="{% url 'cliente:cliente_update' cliente.pk %}" 
+                           class="text-green-600 hover:text-green-900">Editar</a>
+                        <a href="{% url 'cliente:cliente_delete' cliente.pk %}" 
+                           class="text-red-600 hover:text-red-900">Excluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                        Nenhum cliente encontrado.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginação -->
+    {% if is_paginated %}
+    <div class="flex justify-center mt-6">
+        <div class="flex space-x-2">
+            {% if page_obj.has_previous %}
+            <a href="?page=1{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}{% if request.GET.direction %}&direction={{ request.GET.direction }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+               class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">&laquo; Primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}{% if request.GET.direction %}&direction={{ request.GET.direction }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+               class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">Anterior</a>
+            {% endif %}
+
+            <span class="px-3 py-2">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}{% if request.GET.direction %}&direction={{ request.GET.direction }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+               class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">Próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}{% if request.GET.direction %}&direction={{ request.GET.direction }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+               class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">Última &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

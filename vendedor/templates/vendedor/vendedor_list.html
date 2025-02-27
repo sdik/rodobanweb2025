@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Vendedores</h1>
+        <a href="{% url 'vendedor:vendedor_create' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Novo Vendedor
+        </a>
+    </div>
+
+    <!-- Campo de Busca -->
+    <div class="mb-6">
+        <form method="get" class="flex gap-2">
+            <input type="text" 
+                   name="search" 
+                   value="{{ search }}" 
+                   placeholder="Buscar vendedor..."
+                   class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Buscar
+            </button>
+            {% if search %}
+                <a href="{% url 'vendedor:vendedor_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Limpar
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="bg-white shadow-md rounded my-6">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">
+                        <a href="?order={% if current_order == 'nome' %}-{% endif %}nome{% if search %}&search={{ search }}{% endif %}" 
+                           class="flex items-center">
+                            Nome
+                            {% if current_order == 'nome' %}
+                                ↓
+                            {% elif current_order == '-nome' %}
+                                ↑
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="py-3 px-6 text-left">
+                        <a href="?order={% if current_order == 'apelido' %}-{% endif %}apelido{% if search %}&search={{ search }}{% endif %}"
+                           class="flex items-center">
+                            Apelido
+                            {% if current_order == 'apelido' %}
+                                ↓
+                            {% elif current_order == '-apelido' %}
+                                ↑
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="py-3 px-6 text-left">Telefone</th>
+                    <th class="py-3 px-6 text-left">Email</th>
+                    <th class="py-3 px-6 text-center">
+                        <a href="?order={% if current_order == 'percentual_comissao' %}-{% endif %}percentual_comissao{% if search %}&search={{ search }}{% endif %}"
+                           class="flex items-center justify-center">
+                            Comissão
+                            {% if current_order == 'percentual_comissao' %}
+                                ↓
+                            {% elif current_order == '-percentual_comissao' %}
+                                ↑
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="py-3 px-6 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                {% for vendedor in vendedores %}
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left">{{ vendedor.nome }}</td>
+                    <td class="py-3 px-6 text-left">{{ vendedor.apelido }}</td>
+                    <td class="py-3 px-6 text-left">{{ vendedor.telefone }}</td>
+                    <td class="py-3 px-6 text-left">{{ vendedor.email }}</td>
+                    <td class="py-3 px-6 text-center">{{ vendedor.percentual_comissao }}%</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <a href="{% url 'vendedor:vendedor_detail' vendedor.pk %}" class="text-blue-500 hover:text-blue-700 mx-2">
+                                Detalhes
+                            </a>
+                            <a href="{% url 'vendedor:vendedor_update' vendedor.pk %}" class="text-yellow-500 hover:text-yellow-700 mx-2">
+                                Editar
+                            </a>
+                            <a href="{% url 'vendedor:vendedor_delete' vendedor.pk %}" class="text-red-500 hover:text-red-700 mx-2">
+                                Excluir
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="py-3 px-6 text-center">
+                        {% if search %}
+                            Nenhum vendedor encontrado com "{{ search }}"
+                        {% else %}
+                            Nenhum vendedor cadastrado
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Detalhes da Coleta</h1>
+        <div>
+            <a href="{% url 'coleta:coleta_edit' pk=coleta.pk %}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2">
+                Editar
+            </a>
+            <a href="{% url 'coleta:coleta_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white shadow-md rounded my-6 p-6">
+        <div class="grid grid-cols-2 gap-6">
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Informações da Coleta</h2>
+                <p><strong>Número da Apanha:</strong> {{ coleta.numero_apanha }}</p>
+                <p><strong>Data:</strong> {{ coleta.data|date:"d/m/Y" }}</p>
+                <p><strong>Cliente:</strong> {{ coleta.cliente }}</p>
+                <p><strong>Vendedor:</strong> {{ coleta.vendedor }}</p>
+                <p><strong>Forma de Pagamento:</strong> {{ coleta.get_forma_pagamento_display }}</p>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-lg font-semibold mb-4">Pneus da Coleta</h2>
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Série</th>
+                        <th class="py-3 px-6 text-left">Fogo</th>
+                        <th class="py-3 px-6 text-left">Tamanho</th>
+                        <th class="py-3 px-6 text-left">Desenho</th>
+                        <th class="py-3 px-6 text-left">Fabricante</th>
+                        <th class="py-3 px-6 text-right">Valor</th>
+                        <th class="py-3 px-6 text-center">Montado</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    {% for pneu in coleta.pneus.all %}
+                    <tr class="border-b border-gray-200">
+                        <td class="py-3 px-6 text-left">{{ pneu.serie }}</td>
+                        <td class="py-3 px-6 text-left">{{ pneu.fogo }}</td>
+                        <td class="py-3 px-6 text-left">{{ pneu.tamanho }}</td>
+                        <td class="py-3 px-6 text-left">{{ pneu.desenho }}</td>
+                        <td class="py-3 px-6 text-left">{{ pneu.fabricante }}</td>
+                        <td class="py-3 px-6 text-right">R$ {{ pneu.valor|floatformat:2 }}</td>
+                        <td class="py-3 px-6 text-center">
+                            {% if pneu.montado %}
+                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Sim</span>
+                            {% else %}
+                            <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Não</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="border-b border-gray-200">
+                        <td colspan="7" class="py-3 px-6 text-center">Nenhum pneu registrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

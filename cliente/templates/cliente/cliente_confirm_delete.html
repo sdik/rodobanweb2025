@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="px-6 py-4">
+            <h1 class="text-2xl font-bold mb-4">Confirmar Exclusão</h1>
+            
+            <p class="mb-4">
+                Tem certeza que deseja excluir o cliente 
+                {% if object.tipo_pessoa == 'F' %}
+                    "{{ object.nome }}"
+                {% else %}
+                    "{{ object.razao_social }}"
+                {% endif %}?
+            </p>
+            
+            <form method="post" class="flex justify-end space-x-4">
+                {% csrf_token %}
+                <a href="{% url 'cliente:cliente_list' %}" 
+                   class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Cancelar
+                </a>
+                <button type="submit" 
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Confirmar Exclusão
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

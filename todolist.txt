@@ -1,0 +1,9 @@
+ - Sistema Rodoban web:
+
+todo:
+
+- Criar app pricipal com nome core;
+- Criar Tampletes ( home e Footer )
+- Configurar o CSS;
+
+ 

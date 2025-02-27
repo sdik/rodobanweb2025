@@ -1,0 +1,106 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Produtos</h1>
+        <a href="{% url 'produto:produto_create' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Novo Produto
+        </a>
+    </div>
+
+    <!-- Campo de Busca -->
+    <div class="mb-6">
+        <form method="get" class="flex gap-2">
+            <input type="text" 
+                   name="search" 
+                   value="{{ search }}" 
+                   placeholder="Buscar produto..."
+                   class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Buscar
+            </button>
+            {% if search %}
+                <a href="{% url 'produto:produto_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Limpar
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">
+                        <a href="?order={% if current_order == 'descricao' %}-{% endif %}descricao{% if search %}&search={{ search }}{% endif %}" 
+                           class="flex items-center">
+                            Descrição
+                            {% if current_order == 'descricao' %}
+                                ↓
+                            {% elif current_order == '-descricao' %}
+                                ↑
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="py-3 px-6 text-left">Código Bandag</th>
+                    <th class="py-3 px-6 text-left">Grupo</th>
+                    <th class="py-3 px-6 text-left">Tamanho</th>
+                    <th class="py-3 px-6 text-center">Categoria</th>
+                    <th class="py-3 px-6 text-center">Status</th>
+                    <th class="py-3 px-6 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                {% for produto in produtos %}
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left">{{ produto.descricao }}</td>
+                    <td class="py-3 px-6 text-left">{{ produto.cod_bandag }}</td>
+                    <td class="py-3 px-6 text-left">{{ produto.grupo }}</td>
+                    <td class="py-3 px-6 text-left">{{ produto.tamanho.medida }}</td>
+                    <td class="py-3 px-6 text-center">
+                        {% if produto.categoria == 'N' %}
+                            <span class="bg-blue-200 text-blue-800 py-1 px-3 rounded-full text-xs">Novo</span>
+                        {% elif produto.categoria == 'R' %}
+                            <span class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs">Recapado</span>
+                        {% else %}
+                            <span class="bg-purple-200 text-purple-800 py-1 px-3 rounded-full text-xs">Carcaça</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        {% if produto.status == 'A' %}
+                            <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Ativo</span>
+                        {% else %}
+                            <span class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <a href="{% url 'produto:produto_detail' produto.pk %}" class="text-blue-500 hover:text-blue-700 mx-2">
+                                Detalhes
+                            </a>
+                            <a href="{% url 'produto:produto_update' produto.pk %}" class="text-yellow-500 hover:text-yellow-700 mx-2">
+                                Editar
+                            </a>
+                            <a href="{% url 'produto:produto_delete' produto.pk %}" class="text-red-500 hover:text-red-700 mx-2">
+                                Excluir
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="py-3 px-6 text-center">
+                        {% if search %}
+                            Nenhum produto encontrado com "{{ search }}"
+                        {% else %}
+                            Nenhum produto cadastrado
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

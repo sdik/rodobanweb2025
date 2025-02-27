@@ -1,0 +1,246 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6 bg-gray-500">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b">
+            {% if form.instance.pk %}
+                Editar Cliente
+            {% else %}
+                Novo Cliente
+            {% endif %}
+        </h1>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-2" role="alert">
+                <p class="font-bold">Por favor, corrija os erros abaixo:</p>
+                <ul class="list-disc list-inside">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Tipo de Pessoa -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="mb-4">
+                    <label for="{{ form.tipo_pessoa.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ form.tipo_pessoa.label }}
+                    </label>
+                    {% render_field form.tipo_pessoa class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                </div>
+            </div>
+
+            <!-- Campos Pessoa Física -->
+            <div id="campos-pf" class="bg-gray-50 p-4 rounded-lg space-y-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Dados Pessoais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.nome.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.nome.label }}
+                        </label>
+                        {% render_field form.nome class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.cpf.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.cpf.label }}
+                        </label>
+                        {% render_field form.cpf class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 mask-cpf" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.rg.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.rg.label }}
+                        </label>
+                        {% render_field form.rg class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.data_nascimento.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.data_nascimento.label }}
+                        </label>
+                        {% render_field form.data_nascimento class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.estado_civil.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.estado_civil.label }}
+                        </label>
+                        {% render_field form.estado_civil class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.profissao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.profissao.label }}
+                        </label>
+                        {% render_field form.profissao class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campos Pessoa Jurídica -->
+            <div id="campos-pj" class="bg-gray-50 p-4 rounded-lg space-y-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Dados Empresariais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.razao_social.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.razao_social.label }}
+                        </label>
+                        {% render_field form.razao_social class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.nome_fantasia.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.nome_fantasia.label }}
+                        </label>
+                        {% render_field form.nome_fantasia class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.cnpj.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.cnpj.label }}
+                        </label>
+                        {% render_field form.cnpj class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 mask-cnpj" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.inscricao_estadual.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.inscricao_estadual.label }}
+                        </label>
+                        {% render_field form.inscricao_estadual class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.inscricao_municipal.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.inscricao_municipal.label }}
+                        </label>
+                        {% render_field form.inscricao_municipal class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.responsavel.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.responsavel.label }}
+                        </label>
+                        {% render_field form.responsavel class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="bg-gray-50 p-4 rounded-lg space-y-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Endereço</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="{{ form.cep.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.cep.label }}
+                        </label>
+                        {% render_field form.cep class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 mask-cep" %}
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="{{ form.logradouro.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.logradouro.label }}
+                        </label>
+                        {% render_field form.logradouro class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.numero.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.numero.label }}
+                        </label>
+                        {% render_field form.numero class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="{{ form.complemento.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.complemento.label }}
+                        </label>
+                        {% render_field form.complemento class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.bairro.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.bairro.label }}
+                        </label>
+                        {% render_field form.bairro class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.cidade.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.cidade.label }}
+                        </label>
+                        {% render_field form.cidade class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.estado.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.estado.label }}
+                        </label>
+                        {% render_field form.estado class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.ibge.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.ibge.label }}
+                        </label>
+                        {% render_field form.ibge class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contato -->
+            <div class="bg-gray-50 p-4 rounded-lg space-y-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Contato</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="{{ form.telefone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.telefone.label }}
+                        </label>
+                        {% render_field form.telefone class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 mask-telefone-dinamico" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.celular.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.celular.label }}
+                        </label>
+                        {% render_field form.celular class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 mask-telefone-dinamico" %}
+                    </div>
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.email.label }}
+                        </label>
+                        {% render_field form.email class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-4 pt-4">
+                <a href="{% url 'cliente:cliente_list' %}" 
+                   class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Cancelar
+                </a>
+                <button type="submit" 
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipoPessoa = document.getElementById('id_tipo_pessoa');
+        const camposPF = document.getElementById('campos-pf');
+        const camposPJ = document.getElementById('campos-pj');
+
+        function toggleCampos() {
+            if (tipoPessoa.value === 'F') {
+                camposPF.style.display = 'block';
+                camposPJ.style.display = 'none';
+            } else {
+                camposPF.style.display = 'none';
+                camposPJ.style.display = 'block';
+            }
+        }
+
+        tipoPessoa.addEventListener('change', toggleCampos);
+        toggleCampos();
+    });
+</script>
+<script src="{% static 'js/masks.js' %}"></script>
+<script src="{% static 'js/cep.js' %}"></script>
+{% endblock %}
+{% endblock %} 

@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Fabricantes</h1>
+        <a href="{% url 'fabricante:fabricante_create' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Novo Fabricante
+        </a>
+    </div>
+
+    <!-- Campo de Busca -->
+    <div class="mb-6">
+        <form method="get" class="flex gap-2">
+            <input type="text" 
+                   name="search" 
+                   value="{{ search }}" 
+                   placeholder="Buscar fabricante..."
+                   class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Buscar
+            </button>
+            {% if search %}
+                <a href="{% url 'fabricante:fabricante_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Limpar
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="bg-white shadow-md rounded my-6">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">
+                        <a href="?order={% if current_order == 'nome' %}-{% endif %}nome{% if search %}&search={{ search }}{% endif %}" 
+                           class="flex items-center">
+                            Nome
+                            {% if current_order == 'nome' %}
+                                ↓
+                            {% elif current_order == '-nome' %}
+                                ↑
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="py-3 px-6 text-center">Status</th>
+                    <th class="py-3 px-6 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                {% for fabricante in fabricantes %}
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left">{{ fabricante.nome }}</td>
+                    <td class="py-3 px-6 text-center">
+                        {% if fabricante.status == 'A' %}
+                            <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Ativo</span>
+                        {% else %}
+                            <span class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <a href="{% url 'fabricante:fabricante_detail' fabricante.pk %}" class="text-blue-500 hover:text-blue-700 mx-2">
+                                Detalhes
+                            </a>
+                            <a href="{% url 'fabricante:fabricante_update' fabricante.pk %}" class="text-yellow-500 hover:text-yellow-700 mx-2">
+                                Editar
+                            </a>
+                            <a href="{% url 'fabricante:fabricante_delete' fabricante.pk %}" class="text-red-500 hover:text-red-700 mx-2">
+                                Excluir
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="py-3 px-6 text-center">
+                        {% if search %}
+                            Nenhum fabricante encontrado com "{{ search }}"
+                        {% else %}
+                            Nenhum fabricante cadastrado
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

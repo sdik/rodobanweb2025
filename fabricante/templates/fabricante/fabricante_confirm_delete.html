@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h1 class="text-2xl font-bold mb-6 text-center">Confirmar Exclusão</h1>
+        
+        <p class="text-gray-700 text-center mb-6">
+            Tem certeza que deseja excluir o fabricante "{{ object.nome }}"?
+        </p>
+
+        <form method="post" class="flex justify-center gap-4">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Confirmar
+            </button>
+            <a href="{% url 'fabricante:fabricante_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %} 
